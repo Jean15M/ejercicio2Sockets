@@ -47,7 +47,7 @@ public class Cliente {
                 out = new DataOutputStream(sc.getOutputStream());
 
                 String mensaje1 = teclado.readLine();
-                if (mensaje1.matches("^[a-z]+$")) {
+                if (mensaje1.matches("^[a-zA-Z]+$")) {
                     System.out.println("entre");
                     out.writeUTF(mensaje1);
                     String mensaje = in.readUTF();
