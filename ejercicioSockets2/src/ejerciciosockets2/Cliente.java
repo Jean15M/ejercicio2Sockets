@@ -23,8 +23,7 @@ public class Cliente {
         DataInputStream in;
         DataOutputStream out;
         BufferedReader teclado = null;
-        boolean c = true, validador = true;
-
+        boolean validador = true;
         try {
             while (validador == true) {
                 System.out.println("INGLRE LA IP ");
@@ -32,33 +31,39 @@ public class Cliente {
                 ipSecundario = teclado.readLine();
                 System.out.println("INGLRE EL PUERTO ");
                 teclado = new BufferedReader(new InputStreamReader(System.in));
-                puertoSecundario = Integer.parseInt(teclado.readLine());
-                puertoVal = String.valueOf(puertoSecundario);
-                if (ipSecundario.equals("192.168.100.6") && puertoVal.equals("8080")) {
-                    validador = false;
+                puertoVal = teclado.readLine();
+                if (ipSecundario.equals("") || puertoVal.equals("") ) {
+                    System.out.println("CAMPOS VACIOS");
                 } else {
-                    System.out.println("Error de conexion. Ingrese nuevamente!!!!");
+                    if (ipSecundario.equals("192.168.100.6") && puertoVal.equals("8080")) {
+                        puertoSecundario= Integer.parseInt(puertoVal);
+                        validador = false;
+                    } else {
+                        System.out.println("Error de conexion. Ingrese nuevamente!!!!");
+                        validador= true;
+                    }
                 }
             }
             Socket sc = new Socket(ipSecundario, puertoSecundario);
-            System.out.println("Ingrese la ");
+            System.out.println("-----INGRESE UNA PALABR------ ");
             while (true) {
                 in = new DataInputStream(sc.getInputStream());
                 out = new DataOutputStream(sc.getOutputStream());
 
                 String mensaje1 = teclado.readLine();
                 if (mensaje1.matches("^[a-zA-Z]+$")) {
-                    System.out.println("entre");
+                    
                     out.writeUTF(mensaje1);
                     String mensaje = in.readUTF();
                     System.out.println(mensaje);
                 } else {
-                    System.out.println("Incorrecto");
+                    System.out.println("NO SE ACEPTA NUMEROS");
                 }
             }
 
         } catch (Exception e) {
             System.out.println("ERROR AL CONECTARSE");
+            System.out.println(e.toString());
         }
     }
 
