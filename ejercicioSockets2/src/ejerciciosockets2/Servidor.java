@@ -24,16 +24,16 @@ public class Servidor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String[] array = {"Un array, es un tipo de dato estructurado que permite almacenar un conjunto de datos.", "Es homogeneo, es decir, todos ellos del mismo tipo y relacionados.","A los datos almacenados en un array se les denomina elementos"};
+        String[] array = {"Un array, es un tipo de dato estructurado que permite almacenar un conjunto de datos.", "Es homogeneo, es decir, todos ellos del mismo tipo y relacionados.","A los datos almacenados en un array se les denomina elementos."};
         String[] array2 = {"Las string son una sucesión o cadena de caracteres. Para definirlas podemos usar comillas simples o dobles."};
-        String[] array3 = {"El tipo de dato int es un entero de 32 bits complemento a dos", "Su valor mínimo es -2,147,483,648 y el máximo 2,147,483,647"};
+        String[] array3 = {"El tipo de dato int es un entero de 32 bits complemento a dos.", "Su valor mínimo es -2,147,483,648 y el máximo 2,147,483,647."};
         String[] array4 = {"El tipo de dato double es un dato en coma flotante IEEE 754 de 64 bits y precisión doble."};
-        String[] array5 = {"El tipo de dato boolean solamente tiene dos valores posibles: true (verdadero) y false (falso)", "Utilice este tipo de datos como conmutadores para la evaluación de condiciones verdadero/falso.","Utilice este tipo de datos como conmutadores para la evaluación de condiciones verdadero/falso."};
-        String[] array6 = {" El tipo Date permite manipular fechas fácilmente. Este tipo convierte las fechas de forma casi automática"};
+        String[] array5 = {"El tipo de dato boolean solamente tiene dos valores posibles: true (verdadero) y false (falso).", "Utilice este tipo de datos como conmutadores para la evaluación de condiciones verdadero/falso.","Utilice este tipo de datos como conmutadores para la evaluación de condiciones verdadero/falso."};
+        String[] array6 = {" El tipo Date permite manipular fechas fácilmente. Este tipo convierte las fechas de forma casi automática."};
         String[] array7 = {"Structured Query Language.", "Es un lenguaje de programación para almacenar y procesar información en una base de datos relacional."};
         String[] array8 = {"LocalDate proporciona muchos métodos útiles para manipular y consultar fechas, como sumar o restar días, meses o años, obtener el día de la semana o verificar si una fecha es anterior o posterior a otra fecha."};
-        String[] array9 = {"El componente TextField es un campo de texto editable por el usuario"};
-        String[] array10 = {"Juanito", "Pepito"};
+        String[] array9 = {"El componente TextField es un campo de texto editable por el usuario."};
+        String[] array10 = {"Los JSpinners son objetos que permiten seleccionar un número, ya sea escribiéndolo en el recuadro, o bien a través de dos botones triangulares.", "A través de los dos botones triangulares se puede hacer que el valor del cuadro aumente o disminuya."};
 
         Map<String, String[]> diccionario = new HashMap<>();
         diccionario.put("string", array2);
@@ -61,24 +61,26 @@ public class Servidor {
                 socket = server.accept();
                 entrada = new DataInputStream(socket.getInputStream());
                 salida = new DataOutputStream(socket.getOutputStream());
-                salida.writeUTF("CONEXCION EXITOSA");
                 String clave = entrada.readUTF().toLowerCase();
-                if (diccionario.get(clave) == null) {
-                    salida.writeUTF("Servidor: Su opción no existe en el diccionario");
-                } else {
-                    String[] resul = (String[]) diccionario.get(clave);
-                    salida.writeUTF(String.join("\n", array));
-                    salida.writeUTF("Servidor: Su respuesta es:" + diccionario.get(clave));
-                    System.out.println("¿Deseas cerrar el Servidor? Si/No");
-                    teclado = new BufferedReader(new InputStreamReader(System.in));
-                    opc = teclado.readLine();
-                    if (opc.equalsIgnoreCase("Si")) {
-                        System.out.println("Cerrando Servidor...");
-                        salida.writeUTF("SERVIDOR CERRADO");
-                        socket.close();
-                        break;
-                    }
+                System.out.println("OPCIÓN ESCOGIDA: "+clave);
+                if(!clave.matches("^[a-zA-Z]+$")){
+                    salida.writeUTF("Servidor: FORMATO INCORRECTO");
+                }else{
+                    if (diccionario.get(clave) == null) {
+                        salida.writeUTF("Servidor: Su opción no existe en el diccionario");
+                    } else {
+                        salida.writeUTF("Servidor: Su respuesta es:\n" +String.join("\n", diccionario.get(clave)));
+                        System.out.println("¿Deseas cerrar el Servidor? Si/No");
+                        teclado = new BufferedReader(new InputStreamReader(System.in));
+                        opc = teclado.readLine();
+                        if (opc.equalsIgnoreCase("Si")) {
+                            System.out.println("Cerrando Servidor...");
+                            salida.writeUTF("SERVIDOR CERRADO");
+                            socket.close();
+                            break;
+                        }
 
+                    }
                 }
             }
 
